@@ -1,8 +1,10 @@
 package com.accenture.androidmvp.dagger.module;
 
+import android.content.Context;
+
 import com.accenture.androidmvp.dagger.scope.AppScope;
-import com.accenture.androidmvp.model.MovieDetailInteractor;
-import com.accenture.androidmvp.model.MovieListInteractor;
+import com.accenture.androidmvp.model.ApiInteractor;
+import com.accenture.androidmvp.model.LocalDbInteractor;
 import com.accenture.androidmvp.model.RestApi;
 
 import dagger.Module;
@@ -14,16 +16,22 @@ import dagger.Provides;
 @Module
 public class InteractorModule {
 
-    @Provides
-    @AppScope
-    MovieListInteractor movieListInteractor(RestApi restApi){
-        return new MovieListInteractor(restApi);
+    private Context context;
+
+    public InteractorModule(Context context){
+        this.context = context;
     }
 
     @Provides
     @AppScope
-    MovieDetailInteractor movieDetailInteractor(RestApi restApi){
-        return new MovieDetailInteractor(restApi);
+    ApiInteractor apiInteractor(RestApi restApi){
+        return new ApiInteractor(restApi);
+    }
+
+    @Provides
+    @AppScope
+    LocalDbInteractor localDbInteractor(){
+        return new LocalDbInteractor(context);
     }
 
 }

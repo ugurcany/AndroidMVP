@@ -5,8 +5,10 @@ package com.accenture.androidmvp.model;
  */
 public interface OnResponseListener<T> {
 
-    void onSuccess(T response);
+    void onLocallyExist(T response);
 
-    void onError(String errMessage);
+    void onApiSuccess(T response);
+
+    void onApiError(String errMessage);
 
 }

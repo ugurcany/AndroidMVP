@@ -1,7 +1,8 @@
 package com.accenture.androidmvp.presenter;
 
 import com.accenture.androidmvp.App;
-import com.accenture.androidmvp.model.MovieDetailInteractor;
+import com.accenture.androidmvp.model.ApiInteractor;
+import com.accenture.androidmvp.model.LocalDbInteractor;
 import com.accenture.androidmvp.model.OnResponseListener;
 import com.accenture.androidmvp.model.pojo.Movie;
 import com.accenture.androidmvp.presenter.contract.IMovieDetailPresenter;
@@ -15,9 +16,13 @@ import javax.inject.Inject;
 public class MovieDetailPresenter implements IMovieDetailPresenter, OnResponseListener<Movie> {
 
     private IMovieDetailView view;
+    private String key;
 
     @Inject
-    MovieDetailInteractor interactor;
+    ApiInteractor apiInteractor;
+
+    @Inject
+    LocalDbInteractor localDbInteractor;
 
     public MovieDetailPresenter(){
         App.injector().interactorComponent().inject(this);
@@ -25,20 +30,29 @@ public class MovieDetailPresenter implements IMovieDetailPresenter, OnResponseLi
 
     @Override
     public void getMovieDetail(IMovieDetailView view, String imdbId) {
+        this.key = imdbId;
         this.view = view;
         view.showLoading();
 
-        interactor.getMovieDetail(this, imdbId);
+        localDbInteractor.getObject(this, imdbId, Movie.class);
+
+        apiInteractor.sendRequest(this, apiInteractor.restApi().getMovieDetail(imdbId, "short", "json"));
     }
 
-
     @Override
-    public void onSuccess(Movie movie) {
+    public void onLocallyExist(Movie movie) {
         view.showSuccess(movie);
     }
 
     @Override
-    public void onError(String errMessage) {
+    public void onApiSuccess(Movie movie) {
+        localDbInteractor.putObject(key, movie);
+
+        view.showSuccess(movie);
+    }
+
+    @Override
+    public void onApiError(String errMessage) {
         view.showError(errMessage);
     }
 

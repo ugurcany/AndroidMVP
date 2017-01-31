@@ -1,7 +1,8 @@
 package com.accenture.androidmvp.presenter;
 
 import com.accenture.androidmvp.App;
-import com.accenture.androidmvp.model.MovieListInteractor;
+import com.accenture.androidmvp.model.ApiInteractor;
+import com.accenture.androidmvp.model.LocalDbInteractor;
 import com.accenture.androidmvp.model.OnResponseListener;
 import com.accenture.androidmvp.model.pojo.MovieList;
 import com.accenture.androidmvp.presenter.contract.IMovieListPresenter;
@@ -15,30 +16,45 @@ import javax.inject.Inject;
 public class MovieListPresenter implements IMovieListPresenter, OnResponseListener<MovieList> {
 
     private IMovieListView view;
+    private String key;
 
     @Inject
-    MovieListInteractor interactor;
+    ApiInteractor apiInteractor;
+
+    @Inject
+    LocalDbInteractor localDbInteractor;
 
     public MovieListPresenter(){
         App.injector().interactorComponent().inject(this);
+
+        localDbInteractor.setTableName("movie_list");
     }
 
     @Override
     public void getMovieList(IMovieListView view, String searchKey){
+        this.key = searchKey;
         this.view = view;
         view.showLoading();
 
-        interactor.getMovieList(this, searchKey);
+        localDbInteractor.getObject(this, searchKey, MovieList.class);
+
+        apiInteractor.sendRequest(this, apiInteractor.restApi().getMovieList(searchKey, "json"));
     }
 
-
     @Override
-    public void onSuccess(MovieList movieList) {
+    public void onLocallyExist(MovieList movieList) {
         view.showSuccess(movieList.movieList);
     }
 
     @Override
-    public void onError(String errMessage) {
+    public void onApiSuccess(MovieList movieList) {
+        localDbInteractor.putObject(key, movieList);
+
+        view.showSuccess(movieList.movieList);
+    }
+
+    @Override
+    public void onApiError(String errMessage) {
         view.showError(errMessage);
     }
 

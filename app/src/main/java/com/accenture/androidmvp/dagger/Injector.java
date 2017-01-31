@@ -24,7 +24,7 @@ public class Injector {
                 .build();
 
         interactorComponent = DaggerInteractorComponent.builder()
-                .interactorModule(new InteractorModule())
+                .interactorModule(new InteractorModule(application.getApplicationContext()))
                 .restModule(new RestModule())
                 .build();
     }
