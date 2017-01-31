@@ -2,24 +2,24 @@ package com.accenture.androidmvp;
 
 import android.app.Application;
 
-import com.accenture.androidmvp.dagger.Injector;
+import com.accenture.androidmvp.dagger.InjectorFactory;
 
 /**
  * Created by ugurcan.yildirim on 30.01.2017.
  */
 public class App extends Application {
 
-    private static Injector injector;
+    private static InjectorFactory injectorFactory;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        injector = new Injector(this);
+        injectorFactory = new InjectorFactory(this);
     }
 
-    public static Injector injector(){
-        return injector;
+    public static InjectorFactory injectorFactory(){
+        return injectorFactory;
     }
 
 }

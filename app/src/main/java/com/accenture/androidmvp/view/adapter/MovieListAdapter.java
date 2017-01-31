@@ -52,18 +52,9 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         return movieList.size();
     }
 
-    public void addItem(Movie movie) {
-        this.movieList.add(movie);
-        this.notifyDataSetChanged();
-    }
-
-    public void addItems(List<Movie> movieList) {
-        this.movieList.addAll(movieList);
-        this.notifyDataSetChanged();
-    }
-
-    public void clearItems() {
+    public void updateItems(List<Movie> movieList) {
         this.movieList.clear();
+        this.movieList.addAll(movieList);
         this.notifyDataSetChanged();
     }
 

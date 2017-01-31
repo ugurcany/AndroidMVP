@@ -19,13 +19,13 @@ public class MovieDetailPresenter implements IMovieDetailPresenter, OnResponseLi
     private String key;
 
     @Inject
-    ApiInteractor apiInteractor;
+    ApiInteractor<Movie> apiInteractor;
 
     @Inject
-    LocalDbInteractor localDbInteractor;
+    LocalDbInteractor<Movie> localDbInteractor;
 
     public MovieDetailPresenter(){
-        App.injector().interactorComponent().inject(this);
+        App.injectorFactory().presenterInjector().inject(this);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class MovieDetailPresenter implements IMovieDetailPresenter, OnResponseLi
         this.view = view;
         view.showLoading();
 
-        localDbInteractor.getObject(this, imdbId, Movie.class);
+        localDbInteractor.getObject(this, key, Movie.class);
 
         apiInteractor.sendRequest(this, apiInteractor.restApi().getMovieDetail(imdbId, "short", "json"));
     }

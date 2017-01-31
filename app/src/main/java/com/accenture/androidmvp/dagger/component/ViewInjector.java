@@ -12,7 +12,7 @@ import dagger.Component;
  */
 @AppScope
 @Component(modules = {PresenterModule.class})
-public interface PresenterComponent {
+public interface ViewInjector {
 
     void inject(MovieListActivity view);
     void inject(MovieDetailActivity view);

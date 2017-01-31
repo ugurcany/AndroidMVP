@@ -45,7 +45,7 @@ public class MovieListActivity extends AppCompatActivity implements IMovieListVi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movielist);
 
-        App.injector().presenterComponent().inject(this);
+        App.injectorFactory().viewInjector().inject(this);
         ButterKnife.bind(this);
 
         initRecyclerView();
@@ -74,8 +74,7 @@ public class MovieListActivity extends AppCompatActivity implements IMovieListVi
 
     @Override
     public void showSuccess(List<Movie> movieList) {
-        ((MovieListAdapter)recyclerView.getAdapter()).clearItems();
-        ((MovieListAdapter)recyclerView.getAdapter()).addItems(movieList);
+        ((MovieListAdapter)recyclerView.getAdapter()).updateItems(movieList);
 
         progressBar.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);

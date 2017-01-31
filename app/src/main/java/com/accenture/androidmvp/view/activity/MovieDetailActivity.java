@@ -39,7 +39,7 @@ public class MovieDetailActivity extends AppCompatActivity implements IMovieDeta
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_moviedetail);
 
-        App.injector().presenterComponent().inject(this);
+        App.injectorFactory().viewInjector().inject(this);
         ButterKnife.bind(this);
 
         String imdbId = getIntent().getStringExtra("imdbId");

@@ -11,14 +11,11 @@ import com.snappydb.SnappydbException;
  */
 public class LocalDbInteractor<T> {
 
-    private String tableName = "";
+    private String tableName;
     private Context context;
 
-    public LocalDbInteractor(Context context){
+    public LocalDbInteractor(Context context, String tableName){
         this.context = context;
-    }
-
-    public void setTableName(String tableName){
         this.tableName = tableName;
     }
 
@@ -27,9 +24,7 @@ public class LocalDbInteractor<T> {
 
         try {
             DB db = DBFactory.open(context, tableName);
-
             object = db.getObject(key, objClass);
-
             db.close();
         } catch(SnappydbException ex) {
             ex.printStackTrace();
@@ -46,9 +41,7 @@ public class LocalDbInteractor<T> {
 
         try {
             DB db = DBFactory.open(context, tableName);
-
             db.put(key, object);
-
             db.close();
         } catch(SnappydbException ex) {
             ex.printStackTrace();

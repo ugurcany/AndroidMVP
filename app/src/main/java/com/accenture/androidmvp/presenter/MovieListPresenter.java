@@ -19,15 +19,13 @@ public class MovieListPresenter implements IMovieListPresenter, OnResponseListen
     private String key;
 
     @Inject
-    ApiInteractor apiInteractor;
+    ApiInteractor<MovieList> apiInteractor;
 
     @Inject
-    LocalDbInteractor localDbInteractor;
+    LocalDbInteractor<MovieList> localDbInteractor;
 
     public MovieListPresenter(){
-        App.injector().interactorComponent().inject(this);
-
-        localDbInteractor.setTableName("movie_list");
+        App.injectorFactory().presenterInjector().inject(this);
     }
 
     @Override
@@ -36,7 +34,7 @@ public class MovieListPresenter implements IMovieListPresenter, OnResponseListen
         this.view = view;
         view.showLoading();
 
-        localDbInteractor.getObject(this, searchKey, MovieList.class);
+        localDbInteractor.getObject(this, key, MovieList.class);
 
         apiInteractor.sendRequest(this, apiInteractor.restApi().getMovieList(searchKey, "json"));
     }
