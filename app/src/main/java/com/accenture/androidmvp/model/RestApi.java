@@ -13,13 +13,13 @@ import retrofit2.http.Query;
 public interface RestApi {
 
     @GET("/")
-    public Call<MovieList> getMovieList(
+    Call<MovieList> getMovieList(
             @Query("s") String searchKey,
             @Query("r") String responseType
     );
 
     @GET("/")
-    public Call<Movie> getMovieDetail(
+    Call<Movie> getMovieDetail(
             @Query("i") String imdbId,
             @Query("plot") String plotLength,
             @Query("r") String responseType

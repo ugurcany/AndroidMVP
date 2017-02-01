@@ -12,7 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".view.activity.MovieListActivity">
+        <activity
+            android:name=".view.activity.MovieListActivity"
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,7 +22,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".view.activity.MovieDetailActivity">
+        <activity
+            android:name=".view.activity.MovieDetailActivity"
+            android:configChanges="orientation|screenSize">
         </activity>
 
     </application>

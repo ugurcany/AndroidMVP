@@ -1,11 +1,11 @@
 package com.accenture.androidmvp.view.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -13,6 +13,8 @@ import com.accenture.androidmvp.App;
 import com.accenture.androidmvp.R;
 import com.accenture.androidmvp.model.pojo.Movie;
 import com.accenture.androidmvp.presenter.MovieListPresenter;
+import com.accenture.androidmvp.util.NavigationManager;
+import com.accenture.androidmvp.util.ViewUtils;
 import com.accenture.androidmvp.view.adapter.MovieListAdapter;
 import com.accenture.androidmvp.view.contract.IMovieListView;
 
@@ -22,6 +24,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnEditorAction;
 
 /**
  * Created by ugurcan.yildirim on 30.01.2017.
@@ -48,9 +51,15 @@ public class MovieListActivity extends AppCompatActivity implements IMovieListVi
         App.injectorFactory().viewInjector().inject(this);
         ButterKnife.bind(this);
 
-        initRecyclerView();
+        presenter.setView(this);
 
-        presenter.getMovieList(this, "lord");
+        initRecyclerView();
+    }
+
+    @Override
+    protected void onDestroy() {
+        presenter.setView(null);
+        super.onDestroy();
     }
 
     private void initRecyclerView(){
@@ -58,11 +67,19 @@ public class MovieListActivity extends AppCompatActivity implements IMovieListVi
         recyclerView.setAdapter(new MovieListAdapter(this));
     }
 
+    @OnEditorAction(R.id.editText)
+    public boolean onEditTextAction(TextView textView, int actionId) {
+        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            ViewUtils.hideKeyboard(this);
+            presenter.getMovieList(textView.getText().toString().trim());
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void onMovieClicked(Movie movie) {
-        Intent intent = new Intent(this, MovieDetailActivity.class);
-        intent.putExtra("imdbId", movie.imdbId);
-        startActivity(intent);
+        NavigationManager.goToMovieDetail(this, movie.imdbId);
     }
 
     @Override
@@ -74,7 +91,7 @@ public class MovieListActivity extends AppCompatActivity implements IMovieListVi
 
     @Override
     public void showSuccess(List<Movie> movieList) {
-        ((MovieListAdapter)recyclerView.getAdapter()).updateItems(movieList);
+        ((MovieListAdapter) recyclerView.getAdapter()).updateItems(movieList);
 
         progressBar.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
@@ -83,6 +100,8 @@ public class MovieListActivity extends AppCompatActivity implements IMovieListVi
 
     @Override
     public void showError(String errMessage) {
+        if(recyclerView.getVisibility() == View.VISIBLE) return;
+
         errText.setText(errMessage);
 
         progressBar.setVisibility(View.GONE);

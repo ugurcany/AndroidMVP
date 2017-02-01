@@ -7,6 +7,8 @@ import com.accenture.androidmvp.view.contract.IMovieDetailView;
  */
 public interface IMovieDetailPresenter {
 
-    void getMovieDetail(IMovieDetailView view, String imdbId);
+    void setView(IMovieDetailView view);
+
+    void getMovieDetail(String imdbId);
 
 }

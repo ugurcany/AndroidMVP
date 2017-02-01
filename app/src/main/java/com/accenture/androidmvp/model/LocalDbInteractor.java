@@ -24,14 +24,16 @@ public class LocalDbInteractor<T> {
 
         try {
             DB db = DBFactory.open(context, tableName);
-            object = db.getObject(key, objClass);
+            if(db.exists(key)) {
+                object = db.getObject(key, objClass);
+            }
             db.close();
         } catch(SnappydbException ex) {
             ex.printStackTrace();
         }
 
         if(object != null) {
-            responseListener.onLocallyExist(object);
+            responseListener.onLocallyExist(key, object);
         }
     }
 

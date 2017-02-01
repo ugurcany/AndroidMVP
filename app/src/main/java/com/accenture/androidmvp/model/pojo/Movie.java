@@ -19,4 +19,7 @@ public class Movie {
     @SerializedName("Plot")
     public String plot;
 
+    @SerializedName("Poster")
+    public String poster;
+
 }

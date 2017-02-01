@@ -28,17 +28,21 @@ public class ApiInteractor<T> implements Callback<T> {
 
     @Override
     public void onResponse(Call<T> call, Response<T> response) {
+        String key = call.request().url().toString();
+
         if(response.isSuccessful()) {
-            responseListener.onApiSuccess(response.body());
+            responseListener.onApiSuccess(key, response.body());
         }
         else{
-            responseListener.onApiError("Service error!");
+            responseListener.onApiError(key, "Service error!");
         }
     }
 
     @Override
     public void onFailure(Call<T> call, Throwable t) {
-        responseListener.onApiError("Network error!");
+        String key = call.request().url().toString();
+
+        responseListener.onApiError(key, "Network error!");
     }
 
 }

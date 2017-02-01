@@ -7,6 +7,8 @@ import com.accenture.androidmvp.view.contract.IMovieListView;
  */
 public interface IMovieListPresenter {
 
-    void getMovieList(IMovieListView view, String searchKey);
+    void setView(IMovieListView view);
+
+    void getMovieList(String searchKey);
 
 }
